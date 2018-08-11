@@ -11,7 +11,7 @@ PODS:
   - ZFPlayer/Core (3.1.2)
 
 DEPENDENCIES:
-  - Flutter (from `.symlinks/flutter/ios-release`)
+  - Flutter (from `.symlinks/flutter/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
 
 SPEC REPOS:
@@ -20,7 +20,7 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   Flutter:
-    :path: ".symlinks/flutter/ios-release"
+    :path: ".symlinks/flutter/ios"
   video_player:
     :path: ".symlinks/plugins/video_player/ios"
 

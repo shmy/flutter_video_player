@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class VideoPlayer {
@@ -16,6 +18,8 @@ class VideoPlayer {
     String pic, {
     int kernel = 0,
     bool enableMediaCodec = true,
+    Color primaryColor = Colors.blue,
+    Color titleColor = Colors.white,
   }) async {
     url = Uri.encodeFull(url);
     pic = Uri.encodeFull(pic);
@@ -26,6 +30,23 @@ class VideoPlayer {
       "kernel": kernel,
       "enableMediaCodec": enableMediaCodec,
     };
+    if (Platform.isIOS) {
+      // IOS主题
+      args["iosOnly"] = {
+        "primaryColor": {
+          "red": primaryColor.red,
+          "green": primaryColor.green,
+          "blue": primaryColor.blue,
+          "alpha": primaryColor.alpha,
+        },
+        "titleColor": {
+          "red": titleColor.red,
+          "green": titleColor.green,
+          "blue": titleColor.blue,
+          "alpha": titleColor.alpha,
+        }
+      };
+    }
     await _channel.invokeMethod("play", args);
   }
 }

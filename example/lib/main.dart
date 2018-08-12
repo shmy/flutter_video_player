@@ -24,7 +24,6 @@ class _MyAppState extends State<MyApp> {
       "CCTV-1",
       "http://183.207.249.15/PLTV/3/224/3221225530/index.m3u8",
       "https://avatar.csdn.net/4/C/0/3_l_lhc.jpg",
-      primaryColor: Theme.of(context).primaryColor,
     );
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling

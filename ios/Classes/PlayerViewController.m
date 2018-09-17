@@ -40,13 +40,17 @@
     self.assetURLs = @[[NSURL URLWithString:self.url]];
     
     self.player.assetURLs = self.assetURLs;
-    // 直接横屏
+    
     [self.controlView showTitle:self.name coverURLString:self.pic fullScreenMode:ZFFullScreenModeLandscape];
     // 返回按钮变退出
     [self.controlView.landScapeControlView.backBtn addTarget:self action:@selector(quitAction:) forControlEvents:UIControlEventTouchUpInside];
 //    [self.backBtn addTarget:self action:@selector(backBtnClickAction:) forControlEvents:UIControlEventTouchUpInside];
+    // 直接横屏
     [self.player enterPortraitFullScreen:YES animated:YES];
+    
     [self.player playTheIndex:0];
+//    [self.player seekToTime:30 * 60 completionHandler:nil]; // TODO 跳转到指定时间播放
+    
     
 }
 

@@ -6,21 +6,25 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.content.Intent;
-//import android.widget.ImageView;
-//
-//import com.bumptech.glide.Glide;
+
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
+import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
+
+import java.util.HashMap;
+
+import io.flutter.plugin.common.EventChannel.EventSink;
 
 public class PlayerActivity extends AppCompatActivity {
 
     StandardGSYVideoPlayer videoPlayer;
 
     OrientationUtils orientationUtils;
-
+    public static EventSink eventSink;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,12 +42,17 @@ public class PlayerActivity extends AppCompatActivity {
 
     private void init() {
 
-        Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
-        String url = intent.getStringExtra("url");
-        String pic = intent.getStringExtra("pic");
-        int kernel = intent.getIntExtra("kernel", 0);
-        boolean enableMediaCodec = intent.getBooleanExtra("enableMediaCodec", true);
+
+        final Intent intent = getIntent();
+        final String name = intent.getStringExtra("name");
+        final String url = intent.getStringExtra("url");
+        final String pic = intent.getStringExtra("pic");
+        final String id = intent.getStringExtra("id");
+        final String tag = intent.getStringExtra("tag");
+        final String append = intent.getStringExtra("append");
+        final int seek = intent.getIntExtra("seek", 0);
+        final int kernel = intent.getIntExtra("kernel", 0);
+        final  boolean enableMediaCodec = intent.getBooleanExtra("enableMediaCodec", true);
 
         if (enableMediaCodec) {
             // 启用硬件解码
@@ -60,14 +69,11 @@ public class PlayerActivity extends AppCompatActivity {
 
         videoPlayer =  (StandardGSYVideoPlayer)findViewById(R.id.video_player);
 
-
-
-        videoPlayer.setUp(url, true, name);
-
         // 显示标题栏
         videoPlayer.getTitleTextView().setVisibility(View.VISIBLE);
         // 显示返回键
         videoPlayer.getBackButton().setVisibility(View.VISIBLE);
+
         // 隐藏全屏按钮
         videoPlayer.getFullscreenButton().setVisibility(View.GONE);
 
@@ -84,22 +90,36 @@ public class PlayerActivity extends AppCompatActivity {
         //关闭自动旋转
         videoPlayer.setRotateViewAuto(false);
         videoPlayer.setLockLand(false);
-//        videoPlayer.setShowFullAnimation(false);
-//        videoPlayer.setNeedLockFull(true);
+        videoPlayer.setShowFullAnimation(false);
+        // 显示小锁
+        videoPlayer.setIfCurrentIsFullscreen(true);
+        videoPlayer.setNeedLockFull(true);
+
+        // 小锁点击逻辑
+        videoPlayer.setLockClickListener(new LockClickListener() {
+            @Override
+            public void onClick(View view, boolean lock) {
+            if (orientationUtils != null) {
+                orientationUtils.setEnable(!lock);
+            }
+            }
+        });
 
 
-//
-//        videoPlayer.setLockClickListener(new LockClickListener() {
-//            @Override
-//            public void onClick(View view, boolean lock) {
-//                if (orientationUtils != null) {
-//                    //配合下方的onConfigurationChanged
-//                    orientationUtils.setEnable(!lock);
-//                }
-//            }
-//        });
-
-
+        videoPlayer.setGSYVideoProgressListener(new GSYVideoProgressListener() {
+            @Override
+            public void onProgress(int progress, int secProgress, int currentPosition, int duration) {
+            if (PlayerActivity.eventSink != null) {
+                HashMap m = new HashMap();
+                m.put("id", id);
+                m.put("name", name);
+                m.put("tag_name", tag);
+                m.put("tag_time", currentPosition);
+                m.put("total_time", duration);
+                PlayerActivity.eventSink.success(m);
+            }
+            }
+        });
         //设置返回按键功能
         videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +128,8 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
 
+        videoPlayer.setUp(url, true, name + append);
+        videoPlayer.setSeekOnStart(seek);
         videoPlayer.startPlayLogic();
     }
 

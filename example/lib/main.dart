@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> initPlatformState() async {
     await VideoPlayer.play(
       "CCTV-1",
-      "http://183.207.249.15/PLTV/3/224/3221225530/index.m3u8",
+      "https://vip.kuyun99.com/20180812/9j5uw6ci/index.m3u8",
       "https://avatar.csdn.net/4/C/0/3_l_lhc.jpg",
     );
     // If the widget was removed from the tree while the asynchronous platform

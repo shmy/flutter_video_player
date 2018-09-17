@@ -2,7 +2,16 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 class VideoPlayer {
-  static const MethodChannel _channel = const MethodChannel('video_player');
+  static const CHANNEL_NAME = "tech.shmy.plugins/video_player/";
+  static const MethodChannel methodChannel = const MethodChannel(CHANNEL_NAME + "method_channel");
+  static const EventChannel eventChannel = const EventChannel(CHANNEL_NAME + "event_channel");
+  // static StreamSubscription eventSubscription = null;
+  static init() {
+    eventChannel.receiveBroadcastStream().listen((data) {
+      print("--------------------");
+      print(data);
+    });
+  }
   /**
    * 设置了视频的播放类型
    * IJKPLAYER = 0; 默认IJK
@@ -14,8 +23,12 @@ class VideoPlayer {
     String name,
     String url,
     String pic, {
-    int kernel = 0,
-    bool enableMediaCodec = true,
+      String id = "",
+      String tag = "",
+      String append = "",
+      int seek = 0,
+      int kernel = 0,
+      bool enableMediaCodec = true,
   }) async {
     url = Uri.encodeFull(url);
     pic = Uri.encodeFull(pic);
@@ -23,9 +36,13 @@ class VideoPlayer {
       "name": name,
       "url": url,
       "pic": pic,
+      "id": id,
+      "tag": tag,
+      "append": append,
+      "seek": seek,
       "kernel": kernel,
       "enableMediaCodec": enableMediaCodec,
     };
-    await _channel.invokeMethod("play", args);
+    await methodChannel.invokeMethod("play", args);
   }
 }

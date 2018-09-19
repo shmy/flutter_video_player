@@ -128,7 +128,7 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
 
-        videoPlayer.setUp(url, true, name + append);
+        videoPlayer.setUp(url, true, name + "-" + tag + append);
         videoPlayer.setSeekOnStart(seek);
         videoPlayer.startPlayLogic();
     }

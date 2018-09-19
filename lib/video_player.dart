@@ -1,16 +1,23 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 
+typedef OnVideoSeekChanged(dynamic);
+
 class VideoPlayer {
   static const CHANNEL_NAME = "tech.shmy.plugins/video_player/";
   static const MethodChannel methodChannel = const MethodChannel(CHANNEL_NAME + "method_channel");
   static const EventChannel eventChannel = const EventChannel(CHANNEL_NAME + "event_channel");
-  // static StreamSubscription eventSubscription = null;
-  static init() {
-    eventChannel.receiveBroadcastStream().listen((data) {
-      print("--------------------");
-      print(data);
+  static StreamSubscription eventSubscription;
+  static init(OnVideoSeekChanged cb) {
+    if (eventSubscription == null) return
+    eventSubscription = eventChannel.receiveBroadcastStream().listen((data) {
+      cb(data);
     });
+  }
+  static dispose() {
+    if (eventSubscription != null) {
+      eventSubscription.cancel();
+    }
   }
   /**
    * 设置了视频的播放类型

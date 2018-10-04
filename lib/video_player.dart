@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/services.dart';
 
 typedef OnVideoSeekChanged(dynamic);
@@ -9,6 +10,7 @@ class VideoPlayer {
   static const EventChannel eventChannel = const EventChannel(CHANNEL_NAME + "event_channel");
   static StreamSubscription eventSubscription;
   static init(OnVideoSeekChanged cb) {
+    // if (Platform.isAndroid) {}
     if (eventSubscription == null) return
     eventSubscription = eventChannel.receiveBroadcastStream().listen((data) {
       cb(data);

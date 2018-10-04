@@ -4,7 +4,7 @@
 @implementation VideoPlayerPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
-      methodChannelWithName:@"video_player"
+      methodChannelWithName:@"tech.shmy.plugins/video_player/method_channel"
             binaryMessenger:[registrar messenger]];
 
   VideoPlayerPlugin *instance = [VideoPlayerPlugin new];
